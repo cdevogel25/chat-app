@@ -18,7 +18,7 @@ const TopBar = () => {
     }
     
     return (
-        <AppBar position='sticky' component='nav' sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, width: '100%'}}>
+        <AppBar position='fixed' component='nav' sx={{ zIndex: (theme) => theme.zIndex.drawer + 1, width: '100%'}}>
             <Toolbar>
                 <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
                     Chat App

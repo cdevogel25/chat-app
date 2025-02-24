@@ -39,6 +39,7 @@ const MessageBox = () => {
                 overflowY: 'auto',
                 p: 2,
                 bgcolor: 'background.paper',
+                mt: 6,
             }}
         >
             <List>

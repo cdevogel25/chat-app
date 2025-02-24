@@ -35,30 +35,14 @@ const NewMessageInput = () => {
     }
 
     return (
-        // <Box sx={{ display: 'flex', gap: 2, mt: 2}}>
-        //     <Box sx={{ p: 2, borderTop: 1, borderColor: 'divider'}}>
-        //         <Box sx={{ display: 'flex', gap: 2}}>
-        //             <TextField
-        //                 fullWidth
-        //                 variant='outlined'
-        //                 placeholder='Type a message...'
-        //                 value={newMessage}
-        //                 onChange={(e) => setNewMessage(e.target.value)}
-        //                 onKeyPress={(e) => {
-        //                     if (e.key === 'Enter') sendMessage();
-        //                 }}
-        //             />
-        //         </Box>
-        //     </Box>
-        // </Box>
-        <Box sx={{ display: 'flex', gap: 2, mt: 2}}>
+        <Box sx={{ display: 'flex', gap: 2, backgroundColor: 'background.paper'}}>
             <TextField
                 fullWidth
                 variant='outlined'
-                placeholder='Type a message...'
+                label='New Message'
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
-                onKeyPress={(e) => {
+                onKeyDown={(e) => {
                     if (e.key === 'Enter') sendMessage();
                 }}
             />
