@@ -25,8 +25,8 @@ const Sidebar = () => {
     }, [])
 
     return (
-        <Box sx={{ width: 250, bgcolor: 'background.paper', p: 2 }}>
-            <Typography variant='h6' sx={{ mb: 2 }}>Online Users</Typography>
+        <Box sx={{ pt: '64px', width: 250, bgcolor: 'background.paper', p: 2 }}>
+            <Typography variant='h6' sx={{ mt: 8, mb: 2 }}>Online Users</Typography>
             <List>
                 {onlineUsers.map((user) => (
                     <Box key={user.id}>

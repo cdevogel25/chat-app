@@ -5,7 +5,7 @@ import {
     orderBy,
     onSnapshot,
 } from 'firebase/firestore'
-import { Box, List, ListItem, ListItemText, Divider } from '@mui/material'
+import { Box, List, ListItemText, Divider, Grid2, Typography } from '@mui/material'
 import { db } from '../../firebase'
 
 const MessageBox = () => {
@@ -43,13 +43,31 @@ const MessageBox = () => {
         >
             <List>
                 {messages.map((msg) => (
-                    <Box key={msg.id}>
-                        <ListItem>
-                            <ListItemText
-                                primary={msg.text}
-                                secondary={msg.senderName}
-                            />
-                        </ListItem>
+                    <Box key={msg.id} >
+                        <Grid2 container justifyContent='space-between' alignItems='center'
+                            sx={{
+                                '&:hover': {
+                                    backgroundColor: 'action.hover',
+                                    borderRadius: 1,
+                                    borderLeft: '4px solid',
+                                    borderColor: 'primary.main',
+                                    transform: 'scale(1.01)',
+                                },
+                                transition: 'background-color 0.2s ease',
+                            }}
+                        >
+                            <Grid2>
+                                <ListItemText sx={{ paddingLeft: 2}}
+                                    primary={msg.text}
+                                    secondary={msg.senderName}
+                                />
+                            </Grid2>
+                            <Grid2>
+                                <Typography variant='body2' sx={{ paddingRight: 2}}>
+                                    {new Date(msg.timestamp?.toDate()).toLocaleString()}
+                                </Typography>
+                            </Grid2>
+                        </Grid2>
                         <Divider />
                     </Box>
                 ))}
@@ -60,4 +78,4 @@ const MessageBox = () => {
     )
 }
 
-export { MessageBox }
+export default MessageBox
