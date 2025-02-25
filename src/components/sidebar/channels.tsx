@@ -4,14 +4,18 @@ import {
     Box,
     Typography,
     ListItem,
+    IconButton
 } from "@mui/material"
 import { collection, onSnapshot, query } from "firebase/firestore"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { db } from "../../firebase"
 
-const Channels = () => {
+interface Channel {
+    id: string
+}
+
+const Channels: React.FC<Channel> = (channel) => {
     const [availableChannels, setAvailableChannels] = useState<Array<any>>([])
-    // const [selectedChannel, setSelectedChannel] = useState<string | null>(null)
 
     useEffect(() => {
         const q = query(collection(db, 'channels'))
@@ -24,16 +28,20 @@ const Channels = () => {
         })
         return () => unsubscribe()
     }, [])
+    
     return (
         <Box sx={{ pt: '64px', width: 250, bgcolor: 'background.paper', p: 2 }}>
             <Typography variant='h6' sx={{ mt: 8, mb: 2}}>Channels</Typography>
             <List>
                 {availableChannels.map((channel) => (
-                    <Box key={channel.id}>
-                        <ListItem>
-                            <ListItemText primary={channel.name} />
-                        </ListItem>
-                    </Box>
+                    <ListItem
+                        key={channel.id}
+                    >
+                        <ListItemText primary={channel.Name} />
+                        <IconButton color='inherit'>
+                            {/* <EastIcon onClick={handleSelectChannel(channel.id)}/> */}
+                        </IconButton>
+                    </ListItem>
                 ))}
             </List>
         </Box>

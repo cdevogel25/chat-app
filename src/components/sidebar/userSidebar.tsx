@@ -9,7 +9,7 @@ import {
     ListItemText,
 } from "@mui/material";
 
-const Sidebar = () => {
+const UserSidebar = () => {
     const [onlineUsers, setOnlineUsers] = useState<Array<any>>([])
 
     useEffect(() => {
@@ -40,4 +40,4 @@ const Sidebar = () => {
     )
 }
 
-export default Sidebar
+export { UserSidebar }

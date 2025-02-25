@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
     collection,
     query,
@@ -8,8 +8,13 @@ import {
 import { Box, List, ListItemText, Divider, Grid2, Typography } from '@mui/material'
 import { db } from '../../firebase'
 
-const MessageBox = () => {
+interface MessageBoxProps {
+    channel: string | null
+}
+
+const MessageBox: React.FC<MessageBoxProps> = ({channel}) => {
     const [messages, setMessages] = useState<Array<any>>([])
+    // how do i pass state from component to component??
     const messagesEndRef = useRef<HTMLDivElement | null>(null) // add a ref to the most recent message
 
     const scrollToBottom = () => {
@@ -21,7 +26,7 @@ const MessageBox = () => {
     }, [messages])
 
     useEffect(() => {
-        const q = query(collection(db, 'messages'), orderBy('timestamp'))
+        const q = query(collection(db, `channels/${channel}/messages`), orderBy('timestamp'))
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const messages: Array<any> = []
             querySnapshot.forEach((doc) => {
@@ -30,7 +35,7 @@ const MessageBox = () => {
         setMessages(messages)
     })
     return () => unsubscribe()
-    }, [])
+    }, [channel])
 
     return (
         <Box
@@ -64,7 +69,7 @@ const MessageBox = () => {
                                 />
                             </Grid2>
                             <Grid2>
-                                <Typography variant='body2' sx={{ paddingRight: 2}}>
+                                <Typography variant='body2' sx={{ paddingRight: 2 }}>
                                     {new Date(msg.timestamp?.toDate()).toLocaleString()}
                                 </Typography>
                             </Grid2>

@@ -1,15 +1,47 @@
 import {
     Box,
     Drawer,
-    Container
+    Container,
+    ListItem,
+    ListItemText,
+    IconButton,
+    List,
+    Typography
 } from '@mui/material'
-import Sidebar from '../sidebar'
+import { UserSidebar } from '../sidebar/userSidebar'
 import MessageBox from "./messageBox";
 import NewMessageInput from "./newMessageInput";
-import TopBar from "./topBar";
-import { Channels } from '../sidebar/channels'
+import TopBar from "./topBar"
+import React, { useEffect, useState } from 'react'
+import { db } from '../../firebase';
+import { collection, onSnapshot, query } from 'firebase/firestore';
+import EastIcon from '@mui/icons-material/East';
+
+interface Channel {
+    id: string;
+    name: string;
+}
 
 const Chat = () => {
+    const [selectedChannelId, setSelectedChannelId] = useState<string | null>('Pj6cg5UuddluF0YbCjvs')
+    const [availableChannels, setAvailableChannels] = useState<Array<Channel>>([])
+
+    const handleSelectChannel = (channelName: string) => {
+        setSelectedChannelId(availableChannels.find((channel) => channel.name === channelName)?.id || '')
+    }
+
+    useEffect(() => {
+        const q = query(collection(db, 'channels'))
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const channels: Array<Channel> = []
+            querySnapshot.forEach((doc) => {
+                channels.push({ id: doc.id, name: doc.data().Name })
+            })
+            setAvailableChannels(channels)
+        })
+        return () => unsubscribe()
+    }, [])
+
 
     return (
         <Box sx={{ display: 'flex' , flexDirection: 'column', height: '100vh'}}>
@@ -26,12 +58,12 @@ const Chat = () => {
                         boxSizing: 'border-box'
                     }
                 }}>
-                    <Sidebar />
+                    <UserSidebar />
                 </Drawer>
                 <Container maxWidth='lg'>
-                    <MessageBox />
-                    <Box position='sticky' sx={{ p: 2, zIndex: (theme) => theme.zIndex.drawer, bottom: 0}}>
-                        <NewMessageInput />
+                    <MessageBox channel={selectedChannelId} />
+                    <Box position='sticky' sx={{ pb: 2, zIndex: (theme) => theme.zIndex.drawer, bottom: 0}}>
+                        <NewMessageInput channel={selectedChannelId} />
                     </Box>
                 </Container>
                 <Drawer
@@ -46,7 +78,22 @@ const Chat = () => {
                             boxSizing: 'border-box'
                         }
                     }}>
-                    <Channels />
+                    {/* <Channels channel={handleSelectChannel} /> */}
+                    <Box sx={{ pt: '64px', width: 250, bgcolor: 'background.paper', p: 2 }}>
+                        <Typography variant='h6' sx={{ mt: 8, mb: 2}}>Channels</Typography>
+                        <List>
+                            {availableChannels.map((channel) => (
+                                <ListItem
+                                    key={channel.id}
+                                >
+                                    <ListItemText primary={channel.name} />
+                                    <IconButton color='inherit'>
+                                        <EastIcon onClick={() => handleSelectChannel(channel.name)}/>
+                                    </IconButton>
+                                </ListItem>
+                            ))}
+                        </List>
+                    </Box>
                 </Drawer>
             </Box>
         </Box>
