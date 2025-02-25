@@ -1,46 +1,38 @@
 import {
     List,
-    ListItemText,
     Box,
     Typography,
     ListItem,
-    IconButton
+    Button
 } from "@mui/material"
-import { collection, onSnapshot, query } from "firebase/firestore"
-import React, { useEffect, useState } from "react"
-import { db } from "../../firebase"
+import React from "react"
+import EastIcon from '@mui/icons-material/East'
 
 interface Channel {
-    id: string
+    id: string;
+    name: string;
 }
 
-const Channels: React.FC<Channel> = (channel) => {
-    const [availableChannels, setAvailableChannels] = useState<Array<any>>([])
+interface ChannelsProps {
+    channels: Channel[];
+    handleSelectChannel: (channelName: string) => void;
+}
 
-    useEffect(() => {
-        const q = query(collection(db, 'channels'))
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            const channels: Array<any> = []
-            querySnapshot.forEach((doc) => {
-                channels.push({ id: doc.id, ...doc.data() })
-            })
-            setAvailableChannels(channels)
-        })
-        return () => unsubscribe()
-    }, [])
+const Channels: React.FC<ChannelsProps> = ({ channels, handleSelectChannel }) => {
     
     return (
-        <Box sx={{ pt: '64px', width: 250, bgcolor: 'background.paper', p: 2 }}>
-            <Typography variant='h6' sx={{ mt: 8, mb: 2}}>Channels</Typography>
+        <Box sx={{ pt: '64px', width: 250, bgcolor: 'background.paper', p:2 }}>
+            <Typography variant='h6' sx={{ mt: 8 }}>Channels</Typography>
             <List>
-                {availableChannels.map((channel) => (
-                    <ListItem
-                        key={channel.id}
-                    >
-                        <ListItemText primary={channel.Name} />
-                        <IconButton color='inherit'>
-                            {/* <EastIcon onClick={handleSelectChannel(channel.id)}/> */}
-                        </IconButton>
+                {channels.map((channel) => (
+                    <ListItem key={channel.id}>
+                        <Button
+                            variant='contained'
+                            color='inherit'
+                            fullWidth
+                            endIcon={<EastIcon />}
+                            onClick={() => handleSelectChannel(channel.name)}
+                        >{channel.name}</Button>
                     </ListItem>
                 ))}
             </List>

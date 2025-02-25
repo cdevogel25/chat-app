@@ -2,20 +2,15 @@ import {
     Box,
     Drawer,
     Container,
-    ListItem,
-    ListItemText,
-    IconButton,
-    List,
-    Typography
 } from '@mui/material'
 import { UserSidebar } from '../sidebar/userSidebar'
 import MessageBox from "./messageBox";
 import NewMessageInput from "./newMessageInput";
 import TopBar from "./topBar"
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { db } from '../../firebase';
-import { collection, onSnapshot, query } from 'firebase/firestore';
-import EastIcon from '@mui/icons-material/East';
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { Channels } from '../sidebar/channels';
 
 interface Channel {
     id: string;
@@ -31,7 +26,7 @@ const Chat = () => {
     }
 
     useEffect(() => {
-        const q = query(collection(db, 'channels'))
+        const q = query(collection(db, 'channels'), orderBy('Name'))
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
             const channels: Array<Channel> = []
             querySnapshot.forEach((doc) => {
@@ -78,22 +73,7 @@ const Chat = () => {
                             boxSizing: 'border-box'
                         }
                     }}>
-                    {/* <Channels channel={handleSelectChannel} /> */}
-                    <Box sx={{ pt: '64px', width: 250, bgcolor: 'background.paper', p: 2 }}>
-                        <Typography variant='h6' sx={{ mt: 8, mb: 2}}>Channels</Typography>
-                        <List>
-                            {availableChannels.map((channel) => (
-                                <ListItem
-                                    key={channel.id}
-                                >
-                                    <ListItemText primary={channel.name} />
-                                    <IconButton color='inherit'>
-                                        <EastIcon onClick={() => handleSelectChannel(channel.name)}/>
-                                    </IconButton>
-                                </ListItem>
-                            ))}
-                        </List>
-                    </Box>
+                    <Channels channels={availableChannels} handleSelectChannel={handleSelectChannel} />
                 </Drawer>
             </Box>
         </Box>
